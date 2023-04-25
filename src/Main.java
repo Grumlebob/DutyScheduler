@@ -20,11 +20,8 @@ public class Main {
 
         int totalNumberOfVertices = numberOfRA + numberOfDays + 2; //2 for source and sink
 
-        final int source = totalNumberOfVertices - 1;
-        final int sink = totalNumberOfVertices - 2;
-
-        System.out.println("source:" + source);
-        System.out.println("sink:" + sink);
+        final int source = totalNumberOfVertices - 2;
+        final int sink = totalNumberOfVertices - 1;
 
         FlowNetwork G = new FlowNetwork(totalNumberOfVertices);
 
@@ -33,7 +30,7 @@ public class Main {
         //RA 0,1,2 Days 3,4,5,6 and s = 7 t = 8.
 
         // DAYS to Sink - Day vertices are numberOfRA to numberOfRA + numberOfDays
-        for (int i = numberOfRA - 1; i < numberOfRA + numberOfDays; i++) {
+        for (int i = numberOfRA; i < totalNumberOfVertices - 2; i++) {
             // Add edges from each day to the sink, weight 2
             G.addEdge(new FlowEdge(i, sink, 2));
         }
@@ -44,7 +41,7 @@ public class Main {
             String nameOfRA = line[0];
             RAtoVertex.put(nameOfRA, i);
             VertexToRA.put(i, nameOfRA);
-            for (int j = 1; j < line.length - 1; j++) {
+            for (int j = 1; j < line.length; j++) {
                 int day = Integer.parseInt(line[j]);
                 //i: 0
                 //numberOfRA + day: 11 + 3 = 14
@@ -62,31 +59,45 @@ public class Main {
 
             //Compute maximum flow and minimum cut
             FordFulkerson maxflow = new FordFulkerson(G, source, sink);
-            System.out.println("Max flow value = " + maxflow.value());
 
-            //Print graph
-            StringBuilder sb = new StringBuilder();
+
+            /*Print graph
             for (int v = 0; v < G.V(); v++) {
                 for (FlowEdge e : G.adj(v)) {
-                    if ((v == e.from()) && e.flow() > 0)
-                        System.out.println(" " + e);
+                    //if ((v == e.from()))
+                       //System.out.println(" " + e);
 
                 }
-            }
+            }*/
 
 
             
 
             if (numberOfDays * 2 == maxflow.value()) {
-                System.out.println(maxNumberOfDaysForRA);
-                System.out.println(maxflow.value());
-                return;
+                break;
             }
             maxNumberOfDaysForRA++;
 
         }
-
-
-
+        System.out.println(maxNumberOfDaysForRA);
+        ArrayList<String>[] days = new ArrayList[numberOfDays];
+        for (var i = 0; i < days.length; i++) {
+            days[i] = new ArrayList<>();
+        }
+        for (var i = 0; i < numberOfRA; i++) {
+            for (var edge : G.adj(i)) {
+                if (edge.from() != i) continue;
+                if (edge.flow() > 0) {
+                    days[edge.to() - numberOfRA].add(VertexToRA.get(i));
+                }
+            }
+        }
+        for (var i = 0; i < days.length; i++) {
+            System.out.print("Day " + (i + 1) + ":");
+            for (var name : days[i]) {
+                System.out.print(" " + name);
+            }
+            System.out.println();
+        }
     }
 }
