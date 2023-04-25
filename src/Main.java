@@ -21,6 +21,9 @@ public class Main {
         final int source = totalNumberOfVertices - 1;
         final int sink = totalNumberOfVertices - 2;
 
+        System.out.println("source:" + source);
+        System.out.println("sink:" + sink);
+
         FlowNetwork G = new FlowNetwork(totalNumberOfVertices);
 
         //Example:
@@ -32,7 +35,7 @@ public class Main {
             G.addEdge(new FlowEdge(source, i, numberOfDays));
         }
         // DAYS to Sink - Day vertices are numberOfRA to numberOfRA + numberOfDays
-        for (int i = numberOfRA; i < numberOfRA + numberOfDays; i++) {
+        for (int i = numberOfRA-1; i < numberOfRA + numberOfDays; i++) {
             // Add edges from each day to the sink, weight 2
             G.addEdge(new FlowEdge(i, sink, 2));
         }
@@ -55,5 +58,20 @@ public class Main {
         FordFulkerson maxflow = new FordFulkerson(G, source, sink);
         System.out.println("Max flow value = " + maxflow.value());
 
+        //Print graph
+        for (int v = 0; v < G.V(); v++) {
+            for (FlowEdge e : G.adj(v)) {
+                //if ((v == e.from()) && e.flow() > 0)
+                //    System.out.println(" " + e);
+            }
+        }
+
+        if (numberOfDays*2 == maxflow.value()) {
+            System.out.println("YES");
+        }
+        else
+        {
+            System.out.println("NO");
+        }
     }
 }

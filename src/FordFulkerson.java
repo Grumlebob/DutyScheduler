@@ -2,7 +2,7 @@ public class FordFulkerson {
     private final int V;          // number of vertices
     private boolean[] marked;     // marked[v] = true iff s->v path in residual graph
     private FlowEdge[] edgeTo;    // edgeTo[v] = last edge on shortest residual s->v path
-    private double value;         // current value of max flow
+    private int value;         // current value of max flow
 
 
     public FordFulkerson(FlowNetwork G, int s, int t) {
@@ -32,7 +32,7 @@ public class FordFulkerson {
     }
 
 
-    public double value()  {
+    public int value()  {
         return value;
     }
 
@@ -75,8 +75,8 @@ public class FordFulkerson {
         return marked[t];
     }
 
-    private double excess(FlowNetwork G, int v) {
-        double excess = 0.0;
+    private int excess(FlowNetwork G, int v) {
+        int excess = 0;
         for (FlowEdge e : G.adj(v)) {
             if (v == e.from()) excess -= e.flow();
             else               excess += e.flow();
