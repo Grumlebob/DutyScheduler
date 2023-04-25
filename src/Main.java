@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -15,8 +14,7 @@ public class Main {
         int numberOfDays = Integer.parseInt(firstLine[1]);
         int maxNumberOfDaysForRA = 1;
 
-        HashMap<String, Integer> RAtoVertex = new HashMap<String, Integer>();
-        HashMap<Integer, String> VertexToRA = new HashMap<Integer, String>();
+        HashMap<Integer, String> VertexToRA = new HashMap<>();
 
         int totalNumberOfVertices = numberOfRA + numberOfDays + 2; //2 for source and sink
 
@@ -39,7 +37,6 @@ public class Main {
         for (int i = 0; i < numberOfRA; i++) {
             String[] line = br.readLine().split(" ");
             String nameOfRA = line[0];
-            RAtoVertex.put(nameOfRA, i);
             VertexToRA.put(i, nameOfRA);
             for (int j = 1; j < line.length; j++) {
                 int day = Integer.parseInt(line[j]);
@@ -58,7 +55,7 @@ public class Main {
 
 
             //Compute maximum flow and minimum cut
-            FordFulkerson maxflow = new FordFulkerson(G, source, sink);
+            FordFulkerson fordFulkerson = new FordFulkerson(G, source, sink);
 
 
             /*Print graph
@@ -73,13 +70,14 @@ public class Main {
 
             
 
-            if (numberOfDays * 2 == maxflow.value()) {
+            if (numberOfDays * 2 == fordFulkerson.value()) {
                 break;
             }
             maxNumberOfDaysForRA++;
 
         }
         System.out.println(maxNumberOfDaysForRA);
+        @SuppressWarnings("unchecked")
         ArrayList<String>[] days = new ArrayList[numberOfDays];
         for (var i = 0; i < days.length; i++) {
             days[i] = new ArrayList<>();
