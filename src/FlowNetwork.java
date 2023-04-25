@@ -44,9 +44,26 @@ public class FlowNetwork {
      * @throws IllegalArgumentException unless endpoints of edge are between
      *         {@code 0} and {@code V-1}
      */
+    public void addEdgePrev(FlowEdge e) {
+        int v = e.from();
+        int w = e.to();
+
+        adj2D.get(v).removeIf(x -> x.from() == v && x.to() == w);
+        adj2D.get(w).removeIf(x -> x.from() == w && x.to() == v);
+        adj2D.get(v).add(e);
+        adj2D.get(w).add(e);
+        E++;
+    }
+
     public void addEdge(FlowEdge e) {
         int v = e.from();
         int w = e.to();
+        for (FlowEdge edge : adj2D.get(v)) {
+            if (edge.to() == w) {
+                edge.capacity = (e.capacity());
+                return;
+            }
+        }
         adj2D.get(v).add(e);
         adj2D.get(w).add(e);
         E++;

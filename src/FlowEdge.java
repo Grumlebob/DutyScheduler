@@ -13,8 +13,9 @@ public class FlowEdge {
 
     private final int v;             // from
     private final int w;             // to
-    private final double capacity;   // capacity
+    public double capacity;   // capacity
     private double flow;             // flow
+
 
     /**
      * Initializes an edge from vertex {@code v} to vertex {@code w} with
